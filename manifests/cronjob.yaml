@@ -1,0 +1,47 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  labels:
+    k8s-app: check-ssl
+    qcloud-app: check-ssl
+  name: check-ssl
+  namespace: devops
+spec:
+  concurrencyPolicy: Allow
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      completions: 1
+      parallelism: 1
+      template:
+        metadata:
+          creationTimestamp: null
+          labels:
+            k8s-app: check-ssl
+            qcloud-app: check-ssl
+        spec:
+          containers:
+            - image: ${IMAGE}
+              imagePullPolicy: IfNotPresent
+              name: check-ssl
+              resources:
+                limits:
+                  cpu: 200m
+                  memory: 512Mi
+                requests:
+                  cpu: 100m
+                  memory: 128Mi
+              securityContext:
+                privileged: false
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+          dnsPolicy: ClusterFirst
+          imagePullSecrets:
+            - name: qcloudregistrykey
+          restartPolicy: OnFailure
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+  schedule: 0 0 * * 1
+  successfulJobsHistoryLimit: 3
+  suspend: false

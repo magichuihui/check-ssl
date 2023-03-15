@@ -1,0 +1,7 @@
+alidns:
+  accesskey: xxxxxx
+  accesssecret: xxxxxxxx
+  domainname: example.com
+workwx:
+  botkey: abcdefg
+  enabled: false
